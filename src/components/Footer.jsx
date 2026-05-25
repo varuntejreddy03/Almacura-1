@@ -10,7 +10,8 @@ const footerGroups = [
       { name: 'Home', path: '/' },
       { name: 'About Almacura', path: '/about' },
       { name: 'Our Team', path: '/team' },
-      { name: 'Founder', path: '/founder' },
+      { name: 'Blog', path: '/blog' },
+      { name: 'Testimonials', path: '/testimonials' },
       { name: 'Clinical Programs', path: '/programs' },
       { name: 'Patient FAQs', path: '/faq' },
       { name: 'Sitemap', path: '/sitemap' }
@@ -36,6 +37,7 @@ const footerGroups = [
       { name: 'HIFU Women Wellness', path: '/therapies/hifu' },
       { name: 'PRP Therapy', path: '/therapies/prp' },
       { name: 'DSCB Pain Management', path: '/therapies/dscb' },
+      { name: 'Regenerative Yoga', path: '/therapies/yoga' },
       { name: 'All Therapies', path: '/therapies' }
     ]
   }
@@ -126,7 +128,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3 text-white/70 text-sm">
                 <MapPin size={16} className="text-brand-teal mt-1 flex-shrink-0" />
-                <span>Nightingale Super Specialty Hospital, Hyderabad</span>
+                <span>ALMACURA, Nightingale Hospital, X Road, Nagarjuna Sagar Rd, Saidabad, Hyderabad 500059</span>
               </li>
               <li className="pt-2">
                 <a
@@ -152,7 +154,32 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Linktree / Connect With Us */}
         <div className="border-t border-white/5 pt-10 mt-12">
+          <div className="flex flex-col md:flex-row items-center gap-10 bg-white/5 border border-white/10 rounded-2xl p-8">
+            <img
+              src="/linktree-qr.jpeg"
+              alt="ALMACURA Linktree QR Code"
+              className="w-28 h-28 object-contain rounded-xl flex-shrink-0"
+            />
+            <div className="flex-1 text-center md:text-left">
+              <h4 className="font-dm font-bold text-white text-sm uppercase tracking-widest mb-2">Connect With Us</h4>
+              <p className="text-white/50 text-xs leading-relaxed mb-4">
+                Scan the QR code or visit our official links page to access our social media profiles, updates, and important online resources.
+              </p>
+              <a
+                href="https://linktr.ee/nightingalehospital"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-teal text-white text-xs font-dm font-bold uppercase tracking-widest rounded-full hover:bg-brand-blue transition-all"
+              >
+                Open Links <ExternalLink size={12} />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-white/5 pt-10 mt-8">
           <p className="text-white/30 text-[10px] leading-relaxed uppercase tracking-widest text-center max-w-4xl mx-auto">
             <span className="text-white/50 block mb-2">Clinical Disclaimer</span>
             Almacura therapies are integrative and supportive protocols. They are not a replacement for conventional medical diagnostics or treatments prescribed by your primary physician. Results vary by biological profile. Always consult our medical team for individual suitability.

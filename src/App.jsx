@@ -6,7 +6,7 @@ import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 
 const Home = lazy(() => import('./pages/Home'));
-const About = lazy(() => import('./pages/About'));
+const About = lazy(() => import('./pages/Founder'));
 const Programs = lazy(() => import('./pages/Programs'));
 const Therapies = lazy(() => import('./pages/Therapies'));
 const FunctionalGynaecology = lazy(() => import('./pages/FunctionalGynaecology'));
@@ -19,6 +19,8 @@ const Founder = lazy(() => import('./pages/Founder'));
 const Team = lazy(() => import('./pages/Team'));
 const ForDoctors = lazy(() => import('./pages/ForDoctors'));
 const FAQ = lazy(() => import('./pages/FAQ'));
+const Blog = lazy(() => import('./pages/Blog'));
+const Testimonials = lazy(() => import('./pages/Testimonials'));
 const Sitemap = lazy(() => import('./pages/Sitemap'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Disclaimer = lazy(() => import('./pages/Disclaimer'));
@@ -93,6 +95,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
+            <Route path="/founder" element={<About />} />
             <Route path="/programs" element={<Programs />} />
             <Route path="/clinical-programs" element={<Programs />} />
             <Route path="/therapies" element={<Therapies />} />
@@ -109,6 +112,8 @@ function App() {
             <Route path="/for-doctors" element={<ForDoctors />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/faqs" element={<FAQ />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/testimonials" element={<Testimonials />} />
             <Route path="/sitemap" element={<Sitemap />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/disclaimer" element={<Disclaimer />} />

@@ -56,52 +56,6 @@ export default function About() {
         </motion.div>
       </section>
 
-      {/* 2. Deep Integration Section - Yoga & Supportive Care */}
-      <section className="py-32 bg-brand-navy text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(11,110,110,0.15),transparent_60%)]" />
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <motion.div {...fadeInUp}>
-              <SectionLabel color="#0b6e6e">THERAPEUTIC CORE</SectionLabel>
-              <h2 className="font-cormorant text-5xl md:text-6xl font-bold mb-10 italic">Regenerative Yoga Therapy</h2>
-              <p className="font-dm text-lg text-white/60 leading-relaxed mb-10 max-w-xl">
-                Yoga therapy plays a central role at ALMACURA, not as fitness, but as a clinical tool for physiological regulation and stress management.
-              </p>
-              <ul className="space-y-6">
-                {['Improving physiological balance', 'Regulating stress-response systems', 'Supporting cellular recovery', 'Enhancing long-term resilience'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-5 group">
-                    <div className="w-1.5 h-1.5 rounded-full bg-brand-teal group-hover:scale-150 transition-transform"></div>
-                    <span className="font-dm text-sm font-bold uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-16 pt-12 border-t border-white/10">
-                <div className="flex flex-col md:flex-row md:items-center gap-6 p-8 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm">
-                  <div className="shrink-0">
-                    <span className="font-dm text-[9px] font-bold uppercase tracking-[0.3em] text-brand-teal border border-brand-teal/30 px-5 py-2.5 rounded-full">
-                      Supportive Modalities
-                    </span>
-                  </div>
-                  <p className="font-dm text-white/50 text-[12px] leading-relaxed italic">
-                    "In selected cases, Ayurvedic therapies and Homeopathy are incorporated as complementary approaches within our clinical framework."
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div {...fadeInUp} transition={{ delay: 0.3 }} className="relative aspect-[4/5] rounded-[4rem] overflow-hidden shadow-2xl">
-              <img src="/hero-design-bg.png" alt="Clinical environment" className="w-full h-full object-cover grayscale opacity-40 mix-blend-overlay" />
-              <div className="absolute inset-0 flex items-center justify-center p-12 text-center bg-brand-teal/5">
-                <div className="border border-white/10 p-10 backdrop-blur-md rounded-[3rem]">
-                  <p className="font-cormorant text-3xl italic text-white/90">"Every therapy is evidence-informed and supervised by medical professionals."</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
       {/* 3. Core Verticals Section */}
       <section className="py-32 bg-brand-white">
         <div className="max-w-7xl mx-auto px-6 sm:px-8">

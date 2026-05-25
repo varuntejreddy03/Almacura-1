@@ -11,8 +11,9 @@ const navLinks = [
     subLinks: [
       { name: 'Institute Overview', path: '/about' },
       { name: 'Our Team', path: '/team' },
-      { name: 'Founder', path: '/founder' },
-      { name: 'Patient FAQs', path: '/faq' }
+      { name: 'Patient FAQs', path: '/faq' },
+      { name: 'Blog', path: '/blog' },
+      { name: 'Testimonials', path: '/testimonials' }
     ]
   },
   {
@@ -25,6 +26,7 @@ const navLinks = [
       { name: 'HIFU Women Wellness', path: '/therapies/hifu' },
       { name: 'PRP Therapy', path: '/therapies/prp' },
       { name: 'DSCB Pain Management', path: '/therapies/dscb' },
+      { name: 'Regenerative Yoga', path: '/therapies/yoga' },
       { name: 'View All Therapies', path: '/therapies' }
     ]
   },

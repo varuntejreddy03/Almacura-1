@@ -73,9 +73,10 @@ export default function Contact() {
                   <div>
                     <h4 className="font-dm text-sm font-bold text-brand-navy uppercase tracking-wider mb-2">Address</h4>
                     <p className="font-dm text-brand-text leading-relaxed">
-                      At Nightingale Super Specialty Hospital,<br />
-                      Near Santoshnagar Cross Roads, Nagarjuna Sagar Road,<br />
-                      Vinaynagar Colony, Hyderabad-500059
+                      ALMACURA, Nightingale Hospital,<br />
+                      X Road, Nagarjuna Sagar Rd, near Santosh Nagar,<br />
+                      Sayeedabad Road, Saroornagar, Vinay Nagar,<br />
+                      Saidabad, Hyderabad, Telangana 500059
                     </p>
                   </div>
                 </div>
@@ -251,7 +252,7 @@ export default function Contact() {
               <div className="flex-1 text-center md:text-left">
                 <h4 className="font-dm text-lg font-bold text-brand-navy mb-2">Location & Maps QR</h4>
                 <p className="text-sm text-brand-muted mb-4 leading-relaxed">
-                  Links directly to our Google Maps listing at Nightingale Hospital. Use this to help patients navigate to the clinic.
+                  Links directly to ALMACURA on Google Maps at Nightingale Hospital, Saidabad, Hyderabad. Use this to help patients navigate to the clinic.
                 </p>
                 <a 
                   href="/qr-location.png" 
@@ -272,7 +273,7 @@ export default function Contact() {
           className="mt-20 rounded-[2.5rem] overflow-hidden border border-brand-teal/10 shadow-2xl h-[450px] relative"
         >
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.261447191026!2d78.5095882!3d17.351148!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb98658485a115%3A0x871146bda3e070fe!2sNightingale%20Super%20Speciality%20Hospital%20%26%20Laparoscopic%20centre%20%7C%20Santoshnagar%2C%20Saidabad%2C%20Champapet!5e0!3m2!1sen!2sin!4v1778323584647!5m2!1sen!2sin" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.261445114308!2d78.50958779999999!3d17.3511481!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99fc1fd6c481%3A0x56791f2478456a8b!2sALMACURA!5e0!3m2!1sen!2sin!4v1779600483169!5m2!1sen!2sin" 
             width="100%" 
             height="100%" 
             style={{ border: 0 }} 

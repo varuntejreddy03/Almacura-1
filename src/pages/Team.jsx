@@ -1,327 +1,626 @@
-import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  Activity,
+  ArrowRight,
+  Award,
+  BadgeCheck,
+  ChevronDown,
+  GraduationCap,
+  HeartPulse,
+  Search,
+  ShieldCheck,
+  Stethoscope,
+  UserRound
+} from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
-import SectionLabel from '../components/SectionLabel';
-import CTAButton from '../components/CTAButton';
 import useSEO from '../hooks/useSEO';
+import { teamFilters, teamMembers } from '../data/teamData';
+
+const filterTerms = {
+  All: [],
+  'Integrative Medicine': ['integrative medicine', 'integrative', 'functional medicine'],
+  Gynecology: ['gynecology', 'gynaecology', 'women', 'obstetric', 'pelvic'],
+  Orthopedics: ['orthopedics', 'orthopaedics', 'orthopaedic', 'musculoskeletal', 'spine', 'joint', 'pain'],
+  Homeopathy: ['homeopathy', 'homeopathic'],
+  'Health Optimization': ['healthspan', 'optimization', 'preventive', 'metabolic', 'lifestyle', 'wellness optimization'],
+  'Regenerative Care': ['regenerative', 'recovery', 'rehabilitation', 'cellular', 'hifu', 'hifem', 'hbot', 'ozone']
+};
+
+const trustFeatures = [
+  {
+    title: 'Personalized Care',
+    description: 'Care pathways shaped around each patient\'s clinical context, goals, recovery needs, and long-term wellness.',
+    icon: UserRound
+  },
+  {
+    title: 'Advanced Therapeutics',
+    description: 'Integrative support through modern non-invasive wellness technologies and structured therapeutic protocols.',
+    icon: Activity
+  },
+  {
+    title: 'Integrated Clinical Support',
+    description: 'Multidisciplinary coordination across consultants, therapies, lifestyle support, and ongoing recovery planning.',
+    icon: ShieldCheck
+  }
+];
+
+const founderDoctor = teamMembers[0];
+const specialistDoctors = teamMembers.slice(1);
+const interactiveFocusClasses = 'focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-teal/20 focus-visible:ring-offset-2 focus-visible:ring-offset-white';
+
+function Eyebrow({ children, className = '' }) {
+  return (
+    <div className={`mb-4 flex items-center gap-3 text-sm font-semibold uppercase text-brand-teal ${className}`}>
+      <span className="h-px w-10 bg-brand-teal" aria-hidden="true" />
+      <span>{children}</span>
+    </div>
+  );
+}
+
+function memberSearchText(member) {
+  return [
+    member.name,
+    member.role,
+    member.specialty,
+    member.bio,
+    member.fullBio,
+    ...(member.credentials || []),
+    ...(member.clinicalFocus || []),
+    ...(member.areas || []),
+    ...(member.conditions || []),
+    ...(member.therapies || [])
+  ]
+    .join(' ')
+    .toLowerCase();
+}
+
+function matchesFilter(member, activeFilter) {
+  if (activeFilter === 'All') return true;
+
+  const searchText = memberSearchText(member);
+  const terms = filterTerms[activeFilter] || [];
+
+  return terms.some((term) => searchText.includes(term));
+}
+
+function getMemberId(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+function getPreviewTags(member, limit = 4) {
+  return (member.areas?.length ? member.areas : member.clinicalFocus || []).slice(0, limit);
+}
+
+function CredentialChips({ credentials }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {credentials.map((credential) => (
+        <span
+          key={credential}
+          className="inline-flex items-center rounded-full border border-brand-teal/20 bg-brand-teal/5 px-3 py-1 text-sm font-semibold text-brand-teal"
+        >
+          {credential}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function DetailSection({ title, icon: Icon, children, className = '' }) {
+  return (
+    <section className={className}>
+      <div className="mb-3 flex items-center gap-3">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-teal/10 text-brand-teal">
+          <Icon size={18} aria-hidden="true" />
+        </span>
+        <h4 className="text-base font-semibold text-brand-navy">{title}</h4>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function DetailList({ items }) {
+  if (!items?.length) return null;
+
+  return (
+    <ul className="grid gap-x-5 gap-y-2 sm:grid-cols-2">
+      {items.map((item) => (
+        <li key={item} className="flex items-start gap-2 text-[15px] leading-7 text-brand-muted">
+          <span className="mt-3 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-teal/70" aria-hidden="true" />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function DoctorDetails({ member }) {
+  return (
+    <div className="border-t border-brand-border bg-brand-light/70 px-5 py-6 sm:px-6 lg:px-7">
+      <div className="grid gap-7 lg:grid-cols-2">
+        <DetailSection title="About" icon={UserRound} className="lg:col-span-2">
+          <div className="space-y-3">
+            <p className="text-[15px] leading-8 text-brand-muted sm:text-base">{member.bio}</p>
+            {member.fullBio && <p className="text-[15px] leading-8 text-brand-muted sm:text-base">{member.fullBio}</p>}
+          </div>
+        </DetailSection>
+
+        <DetailSection title="Clinical Focus" icon={Stethoscope}>
+          <DetailList items={member.clinicalFocus} />
+        </DetailSection>
+
+        <DetailSection title="Areas of Expertise" icon={Activity}>
+          <DetailList items={member.areas} />
+        </DetailSection>
+
+        {member.conditions && (
+          <DetailSection title="Conditions Managed" icon={HeartPulse}>
+            <DetailList items={member.conditions} />
+          </DetailSection>
+        )}
+
+        {member.therapies && (
+          <DetailSection title="Therapies & Procedures" icon={BadgeCheck}>
+            <DetailList items={member.therapies} />
+          </DetailSection>
+        )}
+
+        {member.approach && (
+          <DetailSection title="Approach to Care" icon={ShieldCheck} className="lg:col-span-2">
+            <p className="border-l-2 border-brand-gold bg-white/70 py-3 pl-4 text-[15px] leading-8 text-brand-muted">
+              {member.approach}
+            </p>
+          </DetailSection>
+        )}
+
+        <DetailSection title="Qualifications" icon={GraduationCap} className="lg:col-span-2">
+          <CredentialChips credentials={member.credentials} />
+        </DetailSection>
+      </div>
+    </div>
+  );
+}
+
+function FounderCard({ founder }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const profileId = 'founder-profile-details';
+
+  return (
+    <motion.article
+      layout
+      className="relative overflow-hidden rounded-lg border border-brand-teal/20 bg-white shadow-[0_24px_70px_rgba(13,33,55,0.12)]"
+    >
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-teal via-brand-blue to-brand-gold" aria-hidden="true" />
+
+      <div className="grid gap-8 p-5 sm:p-8 lg:grid-cols-[minmax(280px,380px),1fr] lg:p-10">
+        <div>
+          <div className="aspect-[4/5] overflow-hidden rounded-lg border border-brand-border bg-brand-ice shadow-inner">
+            <img
+              src={founder.image}
+              alt={founder.name}
+              className="h-full w-full object-cover object-top"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col">
+          <Eyebrow>Founder / Lead Doctor</Eyebrow>
+          <h2 className="font-cormorant text-4xl leading-tight text-brand-navy sm:text-5xl">
+            {founder.name}
+          </h2>
+
+          <div className="mt-4">
+            <CredentialChips credentials={founder.credentials} />
+          </div>
+
+          <p className="mt-5 text-lg font-semibold leading-7 text-brand-blue">{founder.role}</p>
+          <p className="mt-1 text-base leading-7 text-brand-muted">{founder.specialty}</p>
+
+          <div className="mt-5 flex flex-wrap gap-2">
+            {founder.badges.map((badge) => (
+              <span
+                key={badge}
+                className="inline-flex items-center gap-2 rounded-full border border-brand-border bg-brand-ice px-3 py-1.5 text-sm font-medium text-brand-navy"
+              >
+                <Award size={15} className="text-brand-teal" aria-hidden="true" />
+                {badge}
+              </span>
+            ))}
+          </div>
+
+          <p className="mt-6 text-base leading-8 text-brand-muted">{founder.bio}</p>
+
+          <blockquote className="mt-6 border-l-4 border-brand-gold bg-brand-beige/70 px-5 py-4">
+            <p className="text-base italic leading-8 text-brand-navy">"{founder.note}"</p>
+          </blockquote>
+
+          <div className="mt-7 grid gap-5 md:grid-cols-2">
+            <div>
+              <h3 className="mb-3 text-base font-semibold text-brand-navy">Clinical Focus</h3>
+              <div className="flex flex-wrap gap-2">
+                {founder.clinicalFocus.map((item) => (
+                  <span key={item} className="rounded-full bg-brand-teal/10 px-3 py-1.5 text-sm text-brand-teal">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-3 text-base font-semibold text-brand-navy">Areas of Expertise</h3>
+              <div className="flex flex-wrap gap-2">
+                {founder.areas.map((item) => (
+                  <span key={item} className="rounded-full border border-brand-border bg-white px-3 py-1.5 text-sm text-brand-muted">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link
+              to="/contact"
+              className={`inline-flex min-h-[48px] items-center justify-center rounded-md bg-brand-teal px-6 py-3 text-base font-semibold text-white shadow-[0_12px_30px_rgba(11,110,110,0.25)] transition hover:-translate-y-0.5 hover:bg-brand-blue ${interactiveFocusClasses}`}
+            >
+              Book Consultation
+            </Link>
+            <button
+              type="button"
+              aria-expanded={isOpen}
+              aria-controls={profileId}
+              onClick={() => setIsOpen((current) => !current)}
+              className={`inline-flex min-h-[48px] items-center justify-center gap-2 rounded-md border border-brand-teal px-6 py-3 text-base font-semibold text-brand-teal transition hover:-translate-y-0.5 hover:bg-brand-teal hover:text-white ${interactiveFocusClasses}`}
+            >
+              {isOpen ? 'Hide Profile' : 'Read More'}
+              <ChevronDown size={18} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            id={profileId}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: 'easeOut' }}
+            className="overflow-hidden"
+          >
+            <div className="border-t border-brand-border bg-brand-light/70 px-5 py-6 sm:px-8 lg:px-10">
+              <div className="grid gap-7 lg:grid-cols-2">
+                <DetailSection title="About" icon={UserRound} className="lg:col-span-2">
+                  <p className="text-[15px] leading-8 text-brand-muted sm:text-base">{founder.fullBio}</p>
+                </DetailSection>
+                <DetailSection title="Clinical Focus" icon={Stethoscope}>
+                  <DetailList items={founder.clinicalFocus} />
+                </DetailSection>
+                <DetailSection title="Areas of Expertise" icon={Activity}>
+                  <DetailList items={founder.areas} />
+                </DetailSection>
+                <DetailSection title="Qualifications" icon={GraduationCap} className="lg:col-span-2">
+                  <CredentialChips credentials={founder.credentials} />
+                </DetailSection>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.article>
+  );
+}
+
+function DoctorCard({ member, isOpen, onToggle }) {
+  const memberId = getMemberId(member.name);
+  const panelId = `doctor-details-${memberId}`;
+  const previewTags = getPreviewTags(member);
+
+  return (
+    <motion.article
+      layout
+      className="group flex h-full flex-col overflow-hidden rounded-lg border border-brand-border bg-white shadow-[0_16px_45px_rgba(13,33,55,0.07)] transition hover:-translate-y-1 hover:border-brand-teal/40 hover:shadow-[0_22px_60px_rgba(13,33,55,0.12)]"
+    >
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        <div className="flex flex-1 flex-col gap-5 sm:flex-row sm:items-start">
+          <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-full border-4 border-brand-ice bg-brand-ice shadow-sm">
+            <img src={member.image} alt={member.name} className="h-full w-full object-cover object-top" />
+          </div>
+
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div className="flex flex-wrap gap-2">
+              {member.credentials.map((credential) => (
+                <span key={credential} className="rounded-full bg-brand-teal/10 px-2.5 py-1 text-sm font-semibold text-brand-teal">
+                  {credential}
+                </span>
+              ))}
+              {member.experience && (
+                <span className="rounded-full bg-brand-gold/10 px-2.5 py-1 text-sm font-semibold text-brand-navy">
+                  {member.experience} Experience
+                </span>
+              )}
+            </div>
+
+            <h3 className="mt-3 font-cormorant text-3xl leading-tight text-brand-navy">{member.name}</h3>
+            <p className="mt-2 text-base font-semibold leading-7 text-brand-blue">{member.role}</p>
+            <p className="mt-2 line-clamp-2 text-[15px] leading-7 text-brand-muted">{member.bio}</p>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {previewTags.map((tag) => (
+                <span key={tag} className="rounded-full border border-brand-border bg-brand-light px-3 py-1 text-sm text-brand-muted">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div className="mt-auto pt-5">
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+                onClick={onToggle}
+                className={`inline-flex min-h-[46px] w-fit items-center justify-center gap-2 rounded-md px-3 text-base font-semibold text-brand-teal transition hover:bg-brand-teal/5 hover:text-brand-blue ${interactiveFocusClasses}`}
+              >
+                {isOpen ? 'Hide Details' : 'View Details'}
+                {isOpen ? (
+                  <ChevronDown size={18} className="rotate-180 transition-transform" aria-hidden="true" />
+                ) : (
+                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            id={panelId}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="overflow-hidden"
+          >
+            <DoctorDetails member={member} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.article>
+  );
+}
 
 export default function Team() {
   useSEO(
     'Our Clinical Specialists & Directors',
-    'Meet the medical directors and consultants at ALMACURA, leading integrative wellness, pelvic floor rehabilitation, non-surgical pain management, and preventive women’s healthcare.'
+    "Meet the medical directors and consultants at ALMACURA, leading integrative wellness, pelvic floor rehabilitation, non-surgical pain management, and preventive women's healthcare."
   );
-  const teamMembers = [
-    {
-      name: 'Dr. K. Vijaya Shekar Reddy',
-      credentials: ['MBBS', 'MS'],
-      role: 'Founder & Mentor – ALMACURA',
-      specialty: 'General Surgeon | Integrative Medicine Advocate',
-      bio: 'Dr. K. Vijaya Shekar Reddy is a senior General Surgeon with more than three decades of clinical, general and laparoscopic surgical experience. Through years of managing complex chronic and lifestyle-related health conditions, he recognized the growing need for a broader healthcare approach that extends beyond conventional symptom-based treatment and supports long-term recovery, resilience, and overall well-being.',
-      fullBio: 'This vision led to the establishment of ALMACURA — a specialized institute focused on Integrative Medicine, Healthspan Optimization, Functional & Regenerative Gynecology, and advanced non-invasive wellness therapies. His approach combines modern clinical medicine with evidence-informed supportive and regenerative technologies designed to help individuals improve functional health, vitality, recovery, and quality of life through structured and personalized care pathways.',
-      clinicalFocus: [
-        'Integrative & Preventive Healthcare',
-        'Healthspan Optimization',
-        'Functional & Regenerative Wellness',
-        'Recovery & Rehabilitation Support',
-        'Personalized Wellness Pathways',
-        'Non-Surgical Advanced Therapies',
-        'Metabolic & Circulatory Wellness Support',
-        'Long-Term Functional Health Improvement'
-      ],
-      areas: [
-        'Hyperbaric Oxygen Therapy (HBOT)',
-        'EECP Therapy',
-        'Photobiomodulation Therapy',
-        'Ozone Therapy',
-        'Hydrogen Therapy',
-        'Functional Recovery Programs',
-        'Lifestyle & Wellness Optimization',
-        'Regenerative Supportive Therapies'
-      ],
-      note: 'At ALMACURA, our goal is not only to support recovery from illness, but also to help individuals improve vitality, functional wellness, and long-term quality of life through integrative, patient-centric healthcare.'
-    },
-    {
-      name: 'Dr. K. Lalitha Reddy',
-      credentials: ['MBBS', 'DGO'],
-      role: 'Director – Nightingale Hospital | Senior Functional & Regenerative Gynaecology Consultant',
-      specialty: 'Gynaecology & Obstetrics | Functional & Regenerative Gynaecology | Women’s Wellness | Pelvic Floor Rehabilitation | Preventive Women’s Healthcare',
-      bio: 'Dr. K. Lalitha Reddy is a senior Gynaecologist & Obstetrician with over 32 years of clinical experience in women’s healthcare, pregnancy care, functional gynaecology, and regenerative wellness. She currently serves as the Director of Nightingale Hospital and is actively involved in both clinical care and healthcare leadership, with a strong focus on patient-centric and technology-supported women’s wellness services.',
-      fullBio: 'Her clinical practice combines conventional gynaecological expertise with modern non-surgical and minimally invasive regenerative approaches aimed at improving pelvic wellness, intimate health, post-pregnancy recovery, and quality of life in women across different age groups. She has a special interest in Functional & Regenerative Gynaecology utilizing advanced supportive technologies such as HIFEM and HIFU-based wellness therapies as part of structured pelvic rehabilitation and women’s wellness programs. Dr. Lalitha Reddy’s approach emphasizes confidential, individualized, and function-oriented care, integrating preventive women’s healthcare with modern wellness-focused treatment pathways tailored to each patient’s clinical and lifestyle needs.',
-      clinicalFocus: [
-        'Functional & Regenerative Gynaecology',
-        'Pelvic Floor Rehabilitation',
-        'Women’s Preventive Healthcare',
-        'Menopausal Wellness Support',
-        'Post-Pregnancy Recovery Support',
-        'Non-Surgical Women’s Wellness Therapies',
-        'Hormonal Wellness Support',
-        'Intimate Wellness & Pelvic Health',
-        'High-Risk Pregnancy Care',
-        'Integrative Women’s Wellness Programs'
-      ],
-      conditions: [
-        'Stress Urinary Incontinence Support',
-        'Vaginal Laxity & Pelvic Support Concerns',
-        'Cystocele & Rectocele',
-        'Postmenopausal Dryness & Discomfort',
-        'PCOS / Hormonal Wellness Concerns',
-        'Pelvic Floor Weakness',
-        'Postpartum Recovery Concerns',
-        'Functional Intimate Wellness Issues',
-        'Menopausal Wellness-Related Concerns',
-        'Recurrent White Discharge'
-      ],
-      therapies: [
-        'HIFEM Pelvic Floor Strengthening Programs',
-        'HIFU-Based Women’s Wellness Therapies',
-        'Functional Gynaecology Consultations',
-        'Non-Surgical Pelvic Wellness Programs',
-        'Vaginal Rejuvenation & Wellness Support Procedures',
-        'Vaginoplasty',
-        'Stretch Marks Reduction Procedures',
-        'Warts & Skin Tags Removal',
-        'Preventive Women’s Health Assessments',
-        'Integrative Women’s Wellness Support'
-      ],
-      approach: 'Dr. Lalitha Reddy follows a patient-centric and function-oriented approach focused on improving women’s wellness, pelvic health, comfort, and quality of life through personalized and minimally invasive care pathways. Her philosophy combines traditional gynaecological expertise with regenerative and wellness-focused technologies to support long-term functional health and confidence in women across all stages of life.',
-      experience: '32+ Years'
-    },
-    {
-      name: 'Dr. Srujit Kumar Kaparthy',
-      credentials: ['MBBS', 'MS (Orthopaedics)', 'FIA'],
-      role: 'Integrative Pain Management & Orthopaedic Consultant',
-      specialty: 'Orthopaedics | Non-Surgical Pain Management | DSCB Therapy | Musculoskeletal Rehabilitation | Spine & Joint Care',
-      bio: 'Dr. Srujit Kumar Kaparthy is an Orthopaedic and Integrative Pain Management Consultant with clinical expertise in musculoskeletal disorders, spine and joint conditions, sports injuries, and minimally invasive pain management approaches. His practice focuses on improving functional mobility, reducing pain burden, and helping patients return to daily activity through structured, non-surgical, and rehabilitation-oriented care pathways.',
-      areas: ['Orthopaedics', 'Pain Management', 'DSCB Therapy', 'Spine & Joint Care', 'Sports Injury Rehabilitation', 'Functional Mobility Restoration'],
-      fullBio: 'He has a special interest in Distal Sodium Channel Block (DSCB) Therapy, a minimally invasive pain management approach used in selected chronic musculoskeletal and neuropathic pain conditions. Dr. Srujit\'s approach emphasizes conservative and evidence-informed management wherever appropriate, particularly for patients seeking alternatives or supportive pathways before considering major surgical intervention.',
-      clinicalFocus: ['Chronic Musculoskeletal Pain Management', 'Distal Sodium Channel Block (DSCB) Therapy', 'Spine & Joint Disorders', 'Sciatica & Nerve-Related Pain Support', 'Shoulder, Knee & Back Pain Management', 'Sports Injury Rehabilitation', 'Functional Mobility Restoration', 'Orthopaedic Rehabilitation Support', 'Integrative Recovery Protocols', 'Non-Surgical Orthopaedic Care'],
-      conditions: ['Chronic Back Pain', 'Sciatica & Radicular Pain', 'Cervical & Lumbar Spondylosis', 'Disc Bulge-Related Pain', 'Frozen Shoulder & Shoulder Pain', 'Knee Pain & Degenerative Joint Conditions', 'Tendon & Ligament Injuries', 'Musculoskeletal Pain Syndromes', 'Sports Injuries', 'Functional Mobility Limitations'],
-      therapies: ['Distal Sodium Channel Block (DSCB) Therapy', 'Non-Surgical Pain Management Procedures', 'Trigger Point & Localized Pain Interventions', 'Orthopaedic Assessment & Rehabilitation Planning', 'Joint & Musculoskeletal Care', 'Regenerative Support-Based Recovery Approaches', 'Functional Recovery Guidance', 'Integrative Pain Support Protocols']
-    },
-    {
-      name: 'Dr. Ch. Nishitha Reddy',
-      credentials: ['MBBS', 'MS (OBGYN)'],
-      role: 'Functional & Regenerative Gynaecology Consultant',
-      specialty: 'Functional Gynaecology | Regenerative Women\'s Wellness | Pelvic Floor Rehabilitation | Non-Surgical Intimate Wellness | Preventive Women\'s Health',
-      bio: 'Dr. Ch. Nishitha Reddy is a Functional and Regenerative Gynaecology Consultant with expertise in women\'s wellness, pelvic health, hormonal well-being, and non-surgical functional gynaecological care. Her clinical approach focuses on helping women improve comfort, confidence, pelvic support, and overall intimate wellness through personalized, function-oriented treatment strategies.',
-      areas: ['Functional Gynaecology', 'Pelvic Floor Rehabilitation', 'Women\'s Wellness', 'HIFU & HIFEM Therapies', 'Post-Pregnancy Recovery', 'Menopausal Wellness'],
-      fullBio: 'She has a special interest in advanced non-invasive women\'s wellness technologies including High-Intensity Focused Ultrasound (HIFU) and High-Intensity Focused Electromagnetic (HIFEM) therapies, which are utilized as part of structured pelvic floor strengthening, tissue support, and rehabilitation-focused wellness programs. Dr. Nishitha emphasizes patient privacy, comfort, and individualized care planning.',
-      clinicalFocus: ['Functional & Regenerative Gynaecology', 'Pelvic Floor Wellness & Rehabilitation', 'Non-Surgical Intimate Wellness Therapies', 'Women\'s Preventive Health', 'Post-Pregnancy Recovery Support', 'Menopausal Wellness Support', 'Hormonal Wellness Guidance', 'Pelvic Muscle Strengthening Programs', 'Integrative Women\'s Health Care', 'Functional Recovery-Based Gynaecology'],
-      conditions: ['Pelvic Floor Weakness', 'Stress Urinary Incontinence Support', 'Postpartum Pelvic Wellness Concerns', 'Vaginal Laxity & Tissue Support Concerns', 'Menopausal Vaginal Dryness & Discomfort', 'Pelvic Muscle Weakness', 'Functional Intimate Wellness Concerns', 'Hormonal Transition-Related Wellness Issues', 'Reduced Pelvic Support & Core Stability'],
-      therapies: ['HIFU-Based Women\'s Wellness Therapies', 'HIFEM Pelvic Floor Strengthening Programs', 'Functional Gynaecology Consultations', 'Non-Surgical Pelvic Wellness Protocols', 'Regenerative Women\'s Wellness Support', 'Pelvic Rehabilitation Guidance', 'Preventive Women\'s Health Assessments', 'Integrative Hormonal Wellness Support']
-    },
-    {
-      name: 'Dr. K. B. Hareesh Kumar',
-      credentials: ['MBBS', 'DNB'],
-      role: 'Integrative & Functional Medicine Consultant',
-      specialty: 'Integrative Medicine | Functional Medicine | Family Medicine | Healthspan Optimization | Preventive & Regenerative Wellness',
-      bio: 'Dr. K. B. Hareesh Kumar is an Integrative & Functional Medicine Consultant and Family Physician focused on preventive healthcare, chronic disease management, regenerative wellness, and long-term health optimization. At ALMACURA, he oversees individualized wellness and recovery programs integrating advanced non-invasive supportive therapies including HBOT, Medical Ozone Therapy, Hydrogen Therapy, EECP, and lifestyle-focused wellness protocols.',
-      areas: ['Integrative Medicine', 'Functional Medicine', 'Healthspan Optimization', 'Preventive Healthcare', 'HBOT', 'Ozone Therapy', 'EECP'],
-      fullBio: 'His clinical approach combines modern evidence-based medicine with personalized integrative care strategies designed to support recovery, improve functional health, and enhance overall quality of life. Dr. Hareesh Kumar adopts a holistic and patient-centric approach, focusing not only on symptom management but also on improving resilience, vitality, and long-term functional well-being.',
-      clinicalFocus: ['Integrative & Functional Medicine', 'Family & Preventive Medicine', 'Healthspan Optimization', 'Lifestyle & Metabolic Wellness', 'Chronic Disease Wellness Support', 'Cellular Recovery & Wellness Support', 'Functional Health Optimization', 'Recovery & Rehabilitation Support', 'Non-Surgical Wellness Therapies', 'Personalized Integrative Care Programs'],
-      conditions: ['Diabetes & Metabolic Syndrome', 'Hypertension & Lifestyle Disorders', 'Thyroid & Hormonal Wellness Concerns', 'Chronic Fatigue & Low Energy', 'Stress-Related Wellness Concerns', 'Sleep & Recovery Issues', 'Chronic Inflammation Support', 'General Wellness & Preventive Care', 'Age-Related Functional Health Concerns', 'Recovery & Rehabilitation Support Needs'],
-      therapies: ['Hyperbaric Oxygen Therapy (HBOT)', 'Medical Ozone Therapy', 'Hydrogen Therapy', 'EECP Therapy', 'Infrared Sauna Therapy', 'Integrative Recovery Programs', 'Functional Wellness Protocols', 'Preventive Health Evaluations', 'Lifestyle Optimization Programs', 'Personalized Wellness Planning']
-    },
-    {
-      name: 'Dr. Yellewar Niharika',
-      credentials: ['BNYS'],
-      role: 'Integrative Medicine & Lifestyle Consultant',
-      specialty: 'Lifestyle Medicine | Functional Wellness | Metabolic Health Support | Integrative Rehabilitation | Preventive Healthcare',
-      bio: 'Dr. Yellewar Niharika is an Integrative Medicine and Lifestyle Wellness Specialist focused on preventive healthcare, metabolic wellness, functional rehabilitation, and sustainable lifestyle transformation. Her clinical approach combines naturopathy, therapeutic yoga, lifestyle medicine, wellness counselling, and integrative supportive therapies to help individuals improve overall health, resilience, and long-term well-being.',
-      areas: ['Lifestyle Medicine', 'Metabolic Health', 'Therapeutic Yoga', 'Functional Wellness', 'Stress Management', 'Weight Management'],
-      fullBio: 'She works closely with individuals managing metabolic imbalance, obesity, stress-related wellness concerns, hormonal health issues, fatigue, and chronic lifestyle-associated conditions. Dr. Niharika emphasizes holistic wellness, patient education, and individualized lifestyle interventions aimed at improving functional health, recovery, and quality of life.',
-      clinicalFocus: ['Lifestyle & Preventive Medicine', 'Functional Wellness Optimization', 'Metabolic Health Support', 'Weight & Obesity Wellness Support', 'Stress & Sleep Wellness Programs', 'Hormonal Wellness Support', 'Integrative Rehabilitation Support', 'Therapeutic Yoga & Mobility Wellness', 'Fatigue & Lifestyle Disorder Support', 'Wellness Counselling & Lifestyle Modification'],
-      conditions: ['Obesity & Metabolic Syndrome', 'Diabetes Wellness Support', 'PCOS & Hormonal Wellness Concerns', 'Stress & Burnout-Related Wellness Issues', 'Chronic Fatigue & Low Energy', 'Sleep & Lifestyle Imbalance', 'Joint & Musculoskeletal Wellness Support', 'Cervical & Lumbar Discomfort Support', 'Migraine & Stress-Related Concerns', 'Lifestyle-Associated Health Conditions'],
-      therapies: ['Lifestyle & Wellness Programs', 'Therapeutic Yoga Sessions', 'Hydrotherapy', 'Mud Therapy', 'Integrative Detoxification Programs', 'Wellness Rehabilitation Support', 'Ozone Therapy Support Programs', 'HBOT Supportive Wellness Programs', 'Functional Lifestyle Counselling', 'Stress Management & Wellness Protocols']
-    },
-    {
-      name: 'Dr. B. Krishna',
-      credentials: ['BHMS'],
-      role: 'Integrative Medicine & Cellular Wellness Co-ordinator',
-      specialty: 'Integrative Medicine | Cellular Wellness Support | Recovery Optimization | HBOT | Ozone Therapy | Hydrogen Therapy',
-      bio: 'Dr. B. Krishna is an Integrative Medicine professional focused on recovery optimization, cellular wellness support, and non-invasive integrative therapies aimed at improving overall functional well-being. At ALMACURA, he is actively involved in coordinating integrative wellness and recovery programs utilizing advanced supportive technologies including HBOT, Medical Ozone Therapy, and Hydrogen Therapy.',
-      areas: ['Cellular Wellness', 'HBOT Support', 'Ozone Therapy', 'Recovery Optimization', 'Hydrogen Therapy', 'Sports Recovery'],
-      fullBio: 'His clinical approach combines structured wellness coordination with supportive recovery-focused therapies designed to assist individuals seeking improved resilience, vitality, and rehabilitation support. Dr. Krishna\'s approach prioritizes patient comfort, holistic support, and individualized wellness planning.',
-      clinicalFocus: ['Integrative Recovery Support', 'Cellular Wellness Optimization', 'Hyperbaric Oxygen Therapy (HBOT) Support', 'Medical Ozone Therapy Support', 'Hydrogen Therapy Support', 'Recovery & Rehabilitation Assistance', 'Fatigue & Energy Wellness Support', 'Sports Recovery Support', 'Wellness Coordination Programs', 'Functional Recovery Assistance'],
-      conditions: ['Fatigue & Low Energy', 'Recovery & Rehabilitation Support Needs', 'Sports Recovery & Performance Recovery Support', 'Wellness Optimization Goals', 'Stress & Recovery Imbalance', 'General Functional Wellness Concerns', 'Chronic Recovery Support Requirements', 'Post-Illness Recovery Support', 'Lifestyle-Related Fatigue Concerns'],
-      therapies: ['Hyperbaric Oxygen Therapy (HBOT)', 'Medical Ozone Therapy', 'Hydrogen Therapy', 'Integrative Recovery Protocols', 'Cellular Wellness Support Programs', 'Functional Recovery Assistance Programs', 'Wellness Rehabilitation Support', 'Recovery Monitoring & Coordination']
-    },
-    {
-      name: 'Dr. K.K. Tilak Chakravarthy',
-      credentials: ['BHMS'],
-      role: 'Homeopathic & Integrative Medicine Consultant',
-      specialty: 'Homeopathy | Integrative Medicine | Allergy Management | Neurological Wellness Support | Chronic Disease Support',
-      bio: 'Dr. K.K. Tilak Chakravarthy is a Homeopathic and Integrative Medicine Consultant with over 20 years of clinical experience in managing chronic and lifestyle-related health conditions through individualized and holistic care approaches. His practice focuses on supporting long-term wellness, recovery, and overall functional health through personalized homeopathic treatment strategies.',
-      areas: ['Classical Homeopathy', 'Allergy Management', 'Chronic Disease Support', 'Neurological Wellness', 'Autism Support', 'Skin Disorders'],
-      fullBio: 'He has extensive experience in managing allergic conditions, chronic skin disorders, neurological wellness concerns, and developmental support cases including autism spectrum-related care support. Dr. Tilak Chakravarthy emphasizes detailed patient evaluation, individualized treatment planning, and long-term wellness-oriented care.',
-      clinicalFocus: ['Classical Homeopathy', 'Integrative Medicine Support', 'Allergy & Immune Wellness Support', 'Neurological Wellness Support', 'Autism Supportive Care', 'Chronic Skin Disorder Support', 'Pediatric Wellness Support', 'Lifestyle & Chronic Disease Support', 'Holistic Recovery Assistance', 'Long-Term Wellness Management'],
-      conditions: ['Allergic Rhinitis & Recurrent Allergies', 'Sinus & Respiratory Allergy Concerns', 'Eczema & Chronic Skin Conditions', 'Psoriasis Wellness Support', 'Autism Spectrum-Related Supportive Care', 'Neurological Wellness Concerns', 'Migraine & Stress-Related Wellness Issues', 'Chronic Fatigue & Functional Wellness Concerns', 'Recurrent Lifestyle-Related Health Issues'],
-      therapies: ['Classical Homeopathic Consultations', 'Individualized Holistic Treatment Planning', 'Integrative Wellness Support', 'Chronic Disease Wellness Support', 'Long-Term Functional Wellness Monitoring', 'Lifestyle & Wellness Guidance', 'Recovery & Rehabilitation Support Assistance']
-    }
-  ];
 
-  const [expanded, setExpanded] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [expandedDoctor, setExpandedDoctor] = useState(null);
+
+  const filteredDoctors = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return specialistDoctors.filter((member) => {
+      const matchesSearch = !normalizedSearch || memberSearchText(member).includes(normalizedSearch);
+      return matchesSearch && matchesFilter(member, activeFilter);
+    });
+  }, [activeFilter, searchTerm]);
+
+  const schema = useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'MedicalOrganization',
+    name: 'ALMACURA',
+    description: 'Integrative medicine, advanced therapeutics, and personalized patient care.',
+    employee: teamMembers.map((member) => ({
+      '@type': 'Physician',
+      name: member.name,
+      image: member.image,
+      jobTitle: member.role,
+      description: member.specialty,
+      hasCredential: member.credentials.join(', ')
+    }))
+  }), []);
 
   return (
-    <div className="bg-brand-white pt-24">
-      {/* Hero */}
-      <section className="py-24 px-6 bg-brand-ice">
-        <div className="max-w-7xl mx-auto text-center">
-          <ScrollReveal>
-            <SectionLabel>MEDICAL TEAM</SectionLabel>
-            <h1 className="font-cormorant text-6xl md:text-7xl text-brand-navy mb-6 italic">
+    <main className="bg-brand-white pt-24">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+
+      <section className="relative overflow-hidden bg-brand-ice px-6 pb-12 pt-16 sm:pb-16 sm:pt-20 lg:pb-20 lg:pt-24">
+        <div
+          className="absolute inset-0 opacity-60"
+          style={{
+            backgroundImage:
+              'linear-gradient(135deg, rgba(11, 110, 110, 0.08) 1px, transparent 1px), linear-gradient(45deg, rgba(26, 143, 191, 0.05) 1px, transparent 1px)',
+            backgroundSize: '38px 38px'
+          }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" aria-hidden="true" />
+
+        <div className="relative mx-auto max-w-[1180px]">
+          <div className="max-w-4xl">
+            <Eyebrow>Medical Team</Eyebrow>
+            <h1 className="font-cormorant text-4xl leading-tight text-brand-navy sm:text-6xl lg:text-7xl">
               Expert Consultants & Specialists
             </h1>
-            <p className="text-brand-muted text-lg leading-relaxed max-w-3xl mx-auto">
-              Our multidisciplinary team brings together expertise in integrative medicine, advanced therapeutics, and personalized patient care.
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-brand-muted">
+              A multidisciplinary clinical team bringing together integrative medicine, advanced therapeutics, and personalized patient care for recovery, prevention, and long-term health optimization.
             </p>
-          </ScrollReveal>
-        </div>
-      </section>
+          </div>
 
-      {/* Team Members */}
-      <section className="py-24 px-6 bg-brand-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="space-y-6">
-            {teamMembers.map((member, index) => {
-              const isOpen = expanded === index;
-              return (
-                <ScrollReveal key={member.name} delay={index * 0.05}>
-                  <div className={`glass-card transition-all duration-300 ${isOpen ? 'border-brand-teal' : 'hover:border-brand-teal/50'}`}>
-                    {/* Header - always visible */}
-                    <button
-                      onClick={() => setExpanded(isOpen ? null : index)}
-                      className="w-full text-left p-8 flex items-start justify-between gap-6"
-                    >
-                      <div className="flex-1">
-                        <h3 className="font-cormorant text-3xl text-brand-navy mb-1">{member.name}</h3>
-                        <div className="flex flex-wrap items-center gap-1 mb-3">
-                          {member.credentials.map((cred, i) => (
-                            <span key={i} className="flex items-center gap-1">
-                              <span className="font-mono text-brand-teal text-xs uppercase tracking-wider">{cred}</span>
-                              {i < member.credentials.length - 1 && <span className="text-brand-border">·</span>}
-                            </span>
-                          ))}
-                          {member.experience && (
-                            <span className="ml-2 px-2 py-0.5 bg-brand-teal/10 text-brand-teal text-[10px] font-mono font-bold rounded-sm uppercase tracking-wider">
-                              {member.experience} Experience
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-brand-blue font-dm font-semibold text-sm mb-1">{member.role}</p>
-                        <p className="text-brand-muted text-xs italic">{member.specialty}</p>
-                      </div>
-                      <ChevronDown
-                        size={20}
-                        className={`text-brand-teal flex-shrink-0 mt-2 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
-                      />
-                    </button>
-
-                    {/* Expanded Content */}
-                    {isOpen && (
-                      <div className="px-8 pb-8 border-t border-brand-border">
-                        {/* Bio */}
-                        <div className="pt-6 mb-6">
-                          <p className="text-brand-muted leading-relaxed">{member.bio}</p>
-                          {member.fullBio && <p className="text-brand-muted leading-relaxed mt-3">{member.fullBio}</p>}
-                          {member.approach && (
-                            <div className="mt-4 p-5 bg-brand-ice/40 rounded-2xl border border-brand-teal/10">
-                              <h5 className="font-dm font-bold text-brand-teal text-[10px] uppercase tracking-[0.2em] mb-1.5">Approach to Care</h5>
-                              <p className="text-brand-muted text-sm leading-relaxed italic">"{member.approach}"</p>
-                            </div>
-                          )}
-                          {member.note && (
-                            <div className="mt-4 p-5 bg-brand-ice/40 rounded-2xl border border-brand-teal/10">
-                              <h5 className="font-dm font-bold text-brand-teal text-[10px] uppercase tracking-[0.2em] mb-1.5">Founder's Note</h5>
-                              <p className="text-brand-muted text-sm leading-relaxed italic">"{member.note}"</p>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="grid md:grid-cols-3 gap-6">
-                          {/* Clinical Focus */}
-                          {member.clinicalFocus && (
-                            <div>
-                              <h4 className="font-dm font-semibold text-brand-navy text-xs uppercase tracking-widest mb-3 pb-2 border-b border-brand-border">Clinical Focus</h4>
-                              <ul className="space-y-1.5">
-                                {member.clinicalFocus.map((item, i) => (
-                                  <li key={i} className="flex items-start gap-2 text-brand-muted text-sm">
-                                    <span className="text-brand-teal mt-1.5 flex-shrink-0" style={{width:'4px',height:'4px',borderRadius:'50%',background:'#0B6E6E',display:'inline-block'}}></span>
-                                    {item}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          {/* Conditions */}
-                          {member.conditions && (
-                            <div>
-                              <h4 className="font-dm font-semibold text-brand-navy text-xs uppercase tracking-widest mb-3 pb-2 border-b border-brand-border">Conditions Managed</h4>
-                              <ul className="space-y-1.5">
-                                {member.conditions.map((item, i) => (
-                                  <li key={i} className="flex items-start gap-2 text-brand-muted text-sm">
-                                    <span className="text-brand-teal mt-1.5 flex-shrink-0" style={{width:'4px',height:'4px',borderRadius:'50%',background:'#0B6E6E',display:'inline-block'}}></span>
-                                    {item}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          {/* Therapies */}
-                          {member.therapies && (
-                            <div>
-                              <h4 className="font-dm font-semibold text-brand-navy text-xs uppercase tracking-widest mb-3 pb-2 border-b border-brand-border">Therapies & Procedures</h4>
-                              <ul className="space-y-1.5">
-                                {member.therapies.map((item, i) => (
-                                  <li key={i} className="flex items-start gap-2 text-brand-muted text-sm">
-                                    <span className="text-brand-teal mt-1.5 flex-shrink-0" style={{width:'4px',height:'4px',borderRadius:'50%',background:'#0B6E6E',display:'inline-block'}}></span>
-                                    {item}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          {/* Fallback: areas only (for Dr. Vijay) */}
-                          {!member.conditions && !member.therapies && (
-                            <div className="md:col-span-2">
-                              <h4 className="font-dm font-semibold text-brand-navy text-xs uppercase tracking-widest mb-3 pb-2 border-b border-brand-border">Areas of Expertise</h4>
-                              <div className="flex flex-wrap gap-2">
-                                {member.areas.map((area, i) => (
-                                  <span key={i} className="px-3 py-1 bg-brand-ice text-brand-teal text-xs rounded-sm">{area}</span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </ScrollReveal>
-              );
-            })}
+          <div className="mt-10 grid gap-3 sm:grid-cols-3">
+            {[
+              `${teamMembers.length} clinical experts`,
+              'Multidisciplinary care',
+              'Personalized pathways'
+            ].map((item) => (
+              <div key={item} className="rounded-lg border border-white/80 bg-white/75 px-5 py-4 shadow-sm backdrop-blur">
+                <p className="text-base font-semibold leading-7 text-brand-navy">{item}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 px-6 bg-brand-ice">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="bg-white px-6 pb-16 pt-10 sm:pb-20 sm:pt-12 lg:pb-24 lg:pt-14">
+        <div className="mx-auto max-w-[1180px]">
+          <FounderCard founder={founderDoctor} />
+        </div>
+      </section>
+
+      <section className="bg-brand-light px-6 py-16 sm:py-20 lg:py-24">
+        <div className="mx-auto max-w-[1180px]">
           <ScrollReveal>
-            <h2 className="font-cormorant text-5xl md:text-6xl text-brand-navy mb-8">
-              Schedule a Consultation
-            </h2>
-            <p className="text-brand-muted text-lg leading-relaxed mb-12 max-w-2xl mx-auto">
-              Connect with our medical team to discuss your health goals and explore personalized treatment protocols tailored to your needs.
-            </p>
-            <CTAButton variant="primary" to="/contact">
-              Book Consultation
-            </CTAButton>
+            <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-2xl">
+                <Eyebrow>Specialist Directory</Eyebrow>
+                <h2 className="font-cormorant text-4xl leading-tight text-brand-navy sm:text-5xl">
+                  Find the right consultant for your care pathway
+                </h2>
+              </div>
+              <p className="max-w-md text-base leading-8 text-brand-muted">
+                Search by doctor name, specialty, therapeutic area, or clinical focus to quickly narrow the team.
+              </p>
+            </div>
+
+            <div className="mb-10 rounded-lg border border-brand-border bg-white p-4 shadow-[0_14px_40px_rgba(13,33,55,0.06)] sm:p-5">
+              <label htmlFor="doctor-search" className="sr-only">
+                Search doctors by name or specialty
+              </label>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-brand-teal" size={20} aria-hidden="true" />
+                <input
+                  id="doctor-search"
+                  type="search"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder="Search by doctor name or specialty"
+                  className="min-h-[52px] w-full rounded-md border border-brand-border bg-brand-light py-3 pl-12 pr-4 text-base text-brand-navy outline-none transition placeholder:text-brand-muted/70 focus:border-brand-teal focus:bg-white focus:ring-4 focus:ring-brand-teal/10"
+                />
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2" aria-label="Filter doctors by specialty">
+                {teamFilters.map((filter) => {
+                  const isActive = activeFilter === filter;
+
+                  return (
+                    <button
+                      key={filter}
+                      type="button"
+                      aria-pressed={isActive}
+                      onClick={() => setActiveFilter(filter)}
+                      className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                        isActive
+                          ? 'border-brand-teal bg-brand-teal text-white shadow-[0_8px_20px_rgba(11,110,110,0.2)]'
+                          : 'border-brand-border bg-white text-brand-muted hover:border-brand-teal/50 hover:text-brand-teal'
+                      } ${interactiveFocusClasses}`}
+                    >
+                      {filter}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {filteredDoctors.length > 0 ? (
+            <div className="grid items-stretch gap-6 lg:grid-cols-2">
+              {filteredDoctors.map((member, index) => {
+                const memberId = getMemberId(member.name);
+
+                return (
+                  <ScrollReveal key={member.name} delay={index * 0.04} className="h-full">
+                    <DoctorCard
+                      member={member}
+                      isOpen={expandedDoctor === memberId}
+                      onToggle={() => setExpandedDoctor((current) => (current === memberId ? null : memberId))}
+                    />
+                  </ScrollReveal>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="rounded-lg border border-brand-border bg-white px-6 py-10 text-center">
+              <p className="text-base leading-8 text-brand-muted">
+                No specialists match the current search. Clear the search or choose another filter.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchTerm('');
+                  setActiveFilter('All');
+                }}
+                className={`mt-5 inline-flex min-h-[46px] items-center justify-center rounded-md bg-brand-teal px-5 py-3 text-base font-semibold text-white transition hover:bg-brand-blue ${interactiveFocusClasses}`}
+              >
+                Clear Filters
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="bg-white px-6 py-16 sm:py-20 lg:py-24">
+        <div className="mx-auto max-w-[1180px]">
+          <ScrollReveal>
+            <div className="mx-auto max-w-3xl text-center">
+              <Eyebrow className="justify-center">
+                Integrated Care
+              </Eyebrow>
+              <h2 className="font-cormorant text-4xl leading-tight text-brand-navy sm:text-5xl">
+                A multidisciplinary team focused on root-cause healing, recovery, and long-term wellness.
+              </h2>
+            </div>
+
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
+              {trustFeatures.map(({ title, description, icon: Icon }) => (
+                <article
+                  key={title}
+                  className="rounded-lg border border-brand-border bg-brand-light p-6 shadow-[0_12px_36px_rgba(13,33,55,0.06)] transition hover:-translate-y-1 hover:border-brand-teal/40"
+                >
+                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-brand-teal/10 text-brand-teal">
+                    <Icon size={22} aria-hidden="true" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-brand-navy">{title}</h3>
+                  <p className="mt-3 text-[15px] leading-7 text-brand-muted">{description}</p>
+                </article>
+              ))}
+            </div>
           </ScrollReveal>
         </div>
       </section>
-    </div>
+
+      <section className="bg-brand-ice px-6 py-16 sm:py-20 lg:py-24">
+        <div className="mx-auto max-w-4xl text-center">
+          <ScrollReveal>
+            <Eyebrow className="justify-center">Schedule a Consultation</Eyebrow>
+            <h2 className="font-cormorant text-4xl leading-tight text-brand-navy sm:text-5xl lg:text-6xl">
+              Connect with the right specialist
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-brand-muted">
+              Discuss your health goals with our medical team and explore personalized treatment protocols tailored to your needs.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                to="/contact"
+                className={`inline-flex min-h-[50px] w-full items-center justify-center rounded-md bg-brand-teal px-8 py-3 text-base font-semibold text-white shadow-[0_14px_34px_rgba(11,110,110,0.26)] transition hover:-translate-y-0.5 hover:bg-brand-blue sm:w-auto ${interactiveFocusClasses}`}
+              >
+                Book Consultation
+              </Link>
+            </div>
+            <p className="mt-4 text-base leading-7 text-brand-muted">
+              Our team will guide you to the right specialist.
+            </p>
+          </ScrollReveal>
+        </div>
+      </section>
+    </main>
   );
 }

@@ -392,6 +392,42 @@ export const therapiesData = {
     ],
     relatedTherapies: ['red-light', 'acupuncture', 'iv-therapy']
   },
+  yoga: {
+    title: "Regenerative Yoga Therapy",
+    subtitle: "Clinical yoga for physiological regulation and stress management",
+    img: "/therapy-pain.png",
+    description: "Yoga therapy at ALMACURA is not fitness — it is a clinical tool for physiological regulation, stress management, and long-term functional recovery.",
+    sessionDuration: "45-60 minutes",
+    typicalCourse: "Ongoing / as prescribed",
+    nonInvasive: true,
+    benefits: [
+      "Improving physiological balance",
+      "Regulating stress-response systems",
+      "Supporting cellular recovery",
+      "Enhancing long-term resilience",
+      "Improving flexibility and mobility",
+      "Reducing chronic pain burden"
+    ],
+    usedFor: [
+      "Stress & burnout recovery",
+      "Chronic fatigue support",
+      "Musculoskeletal rehabilitation",
+      "Metabolic wellness support",
+      "Post-illness functional recovery"
+    ],
+    notSuitableFor: [
+      "Acute injury without medical clearance",
+      "Severe cardiovascular instability"
+    ],
+    procedure: [
+      "Clinical assessment of functional capacity",
+      "Personalized yoga protocol design",
+      "Supervised therapeutic sessions",
+      "Integration with other ALMACURA therapies",
+      "Progress monitoring and protocol adjustment"
+    ],
+    relatedTherapies: ['red-light', 'hbot', 'infrared-sauna']
+  },
   'infrared-sauna': {
     title: "Infrared Sauna",
     subtitle: "Deep thermal heat for cellular detoxification & recovery",
@@ -498,6 +534,12 @@ export const therapyList = [
     icon: 'Shield',
     title: 'DSCB - Pain Management',
     shortDescription: 'Precision clinical blocks for managing chronic pain and restoring mobility.'
+  },
+  {
+    slug: 'yoga',
+    icon: 'Leaf',
+    title: 'Regenerative Yoga Therapy',
+    shortDescription: 'Clinical yoga for physiological regulation, stress management, and functional recovery support.'
   },
   {
     slug: 'infrared-sauna',
