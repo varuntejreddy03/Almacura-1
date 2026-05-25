@@ -126,11 +126,14 @@ function DetailList({ items }) {
   if (!items?.length) return null;
 
   return (
-    <ul className="grid gap-x-5 gap-y-2 sm:grid-cols-2">
+    <ul className="grid gap-y-3">
       {items.map((item) => (
-        <li key={item} className="flex items-start gap-2 text-[15px] leading-7 text-brand-muted">
-          <span className="mt-3 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-teal/70" aria-hidden="true" />
-          <span>{item}</span>
+        <li
+          key={item}
+          className="grid grid-cols-[0.375rem_minmax(0,1fr)] items-start gap-3 text-[15px] leading-7 text-brand-muted"
+        >
+          <span className="mt-[0.7rem] h-1.5 w-1.5 rounded-full bg-brand-teal/70" aria-hidden="true" />
+          <span className="min-w-0 break-words">{item}</span>
         </li>
       ))}
     </ul>
@@ -325,10 +328,15 @@ function DoctorCard({ member, isOpen, onToggle }) {
       layout
       className="group flex h-full flex-col overflow-hidden rounded-lg border border-brand-border bg-white shadow-[0_16px_45px_rgba(13,33,55,0.07)] transition hover:-translate-y-1 hover:border-brand-teal/40 hover:shadow-[0_22px_60px_rgba(13,33,55,0.12)]"
     >
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <div className="flex flex-1 flex-col gap-5 sm:flex-row sm:items-start">
-          <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-full border-4 border-brand-ice bg-brand-ice shadow-sm">
-            <img src={member.image} alt={member.name} className="h-full w-full object-cover object-top" />
+      <div className="flex flex-1 flex-col p-5 sm:p-7">
+        <div className="flex flex-1 flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
+          <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-4 border-brand-ice bg-brand-ice shadow-sm sm:h-44 sm:w-44 xl:h-48 xl:w-48">
+            <img
+              src={member.image}
+              alt={member.name}
+              className="h-full w-full origin-top scale-125 object-cover transition-transform duration-300 group-hover:scale-[1.3]"
+              style={{ objectPosition: 'center 18%' }}
+            />
           </div>
 
           <div className="flex min-w-0 flex-1 flex-col">
@@ -537,7 +545,11 @@ export default function Team() {
                 const memberId = getMemberId(member.name);
 
                 return (
-                  <ScrollReveal key={member.name} delay={index * 0.04} className="h-full">
+                  <ScrollReveal
+                    key={member.name}
+                    delay={index * 0.04}
+                    className={`h-full transition-[grid-column] duration-300 ${expandedDoctor === memberId ? 'lg:col-span-2' : ''}`}
+                  >
                     <DoctorCard
                       member={member}
                       isOpen={expandedDoctor === memberId}
