@@ -146,7 +146,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3 text-white/70 text-sm">
                 <MapPin size={16} className="text-brand-teal mt-1 flex-shrink-0" />
-                <span>ALMACURA, Nightingale Hospital, X Road, Nagarjuna Sagar Rd, Saidabad, Hyderabad 500059</span>
+                <span>ALMACURA @ Nightingale Hospital, X Roads, Nagarjuna Sagar Ring Rd, near Santoshnagar, Saidabad, Hyderabad 500059</span>
               </li>
               <li className="pt-2">
                 <a
@@ -224,4 +224,5 @@ export default function Footer() {
     </footer>
   );
 }
+
 
