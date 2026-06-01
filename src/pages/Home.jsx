@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Target, Zap, ShieldCheck, Brain, Droplets, Microscope, Activity, Wind, CheckCircle, Heart, Shield, ArrowRight, Calendar, MapPin, Phone, MessageSquare, Clock, ChevronRight } from 'lucide-react';
+import { Target, Zap, ShieldCheck, Brain, Droplets, Microscope, Activity, Wind, CheckCircle, Heart, Shield, ArrowRight, Calendar, MapPin, Phone, MessageSquare, Clock, ChevronRight, TrendingUp, Leaf, HeartPulse, FlaskConical, Flame, Sun } from 'lucide-react';
 import SuitabilityModal from '../components/SuitabilityModal';
 
 export default function Home() {
@@ -142,7 +142,7 @@ export default function Home() {
             {/* Pillar 2 */}
             <motion.div variants={itemFadeIn} className="bg-brand-light border border-brand-teal/10 rounded-[2rem] p-8 hover:shadow-2xl hover:shadow-brand-teal/10 transition-all duration-700 group flex flex-col hover:-translate-y-2">
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-brand-teal shadow-sm mb-8 transition-all duration-500 group-hover:scale-110 group-hover:-rotate-6 group-hover:shadow-xl group-hover:shadow-brand-teal/20 group-hover:bg-brand-teal group-hover:text-white">
-                <Activity className="w-7 h-7 transition-transform duration-500 group-hover:scale-110" />
+                <TrendingUp className="w-7 h-7 transition-transform duration-500 group-hover:scale-110" />
               </div>
               <h3 className="font-cormorant text-xl md:text-2xl font-bold text-brand-navy mb-2">Healthspan Optimization</h3>
               <p className="font-dm text-xs text-brand-teal font-bold tracking-wide uppercase mb-5">For long-term vitality and prevention.</p>
@@ -165,7 +165,7 @@ export default function Home() {
             {/* Pillar 3 */}
             <motion.div variants={itemFadeIn} className="bg-brand-light border border-brand-teal/10 rounded-[2rem] p-8 hover:shadow-2xl hover:shadow-brand-teal/10 transition-all duration-700 group flex flex-col hover:-translate-y-2">
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-brand-teal shadow-sm mb-8 transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:shadow-xl group-hover:shadow-brand-teal/20 group-hover:bg-brand-teal group-hover:text-white">
-                <Shield className="w-7 h-7 transition-transform duration-500 group-hover:scale-110" />
+                <Leaf className="w-7 h-7 transition-transform duration-500 group-hover:scale-110" />
               </div>
               <h3 className="font-cormorant text-xl md:text-2xl font-bold text-brand-navy mb-2">Functional & Regenerative Gynaecology</h3>
               <p className="font-dm text-xs text-brand-teal font-bold tracking-wide uppercase mb-5">For women's health and quality of life.</p>
@@ -249,12 +249,12 @@ export default function Home() {
               className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-6"
             >
               {[
-                { name: 'Circulation', icon: Droplets },
-                { name: 'Oxygen Delivery', icon: Activity },
-                { name: 'Cellular Energy', icon: Zap },
-                { name: 'Inflammation Balance', icon: ShieldCheck },
-                { name: 'Gut Health', icon: Microscope },
-                { name: 'Neuro-Emotional Balance', icon: Brain }
+                { name: 'Circulation', icon: HeartPulse },
+                { name: 'Oxygen Delivery', icon: Wind },
+                { name: 'Cellular Energy', icon: Flame },
+                { name: 'Inflammation Balance', icon: FlaskConical },
+                { name: 'Gut Health', icon: Target },
+                { name: 'Neuro-Emotional Balance', icon: Sun }
               ].map((system, i) => (
                 <motion.div 
                   variants={itemFadeIn}
@@ -525,6 +525,7 @@ export default function Home() {
     </main>
   );
 }
+
 
 
 

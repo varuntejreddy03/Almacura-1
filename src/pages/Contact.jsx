@@ -273,7 +273,7 @@ export default function Contact() {
           className="mt-20 rounded-[2.5rem] overflow-hidden border border-brand-teal/10 shadow-2xl h-[450px] relative"
         >
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.261445114308!2d78.50958779999999!3d17.3511481!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99fc1fd6c481%3A0x56791f2478456a8b!2sALMACURA!5e0!3m2!1sen!2sin!4v1779600483169!5m2!1sen!2sin" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.260813791461!2d78.50951959999999!3d17.3511785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99fc1fd6c481%3A0x56791f2478456a8b!2sALMACURA!5e0!3m2!1sen!2sin!4v1780321447911!5m2!1sen!2sin" 
             width="100%" 
             height="100%" 
             style={{ border: 0 }} 
@@ -287,3 +287,4 @@ export default function Contact() {
     </main>
   );
 }
+
