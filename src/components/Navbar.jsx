@@ -30,6 +30,18 @@ const navLinks = [
       { name: 'View All Therapies', path: '/therapies' }
     ]
   },
+  {
+    name: 'Core Specialties',
+    path: '/integrative-medicine',
+    subLinks: [
+      { name: 'Integrative Medicine', path: '/integrative-medicine' },
+      { name: 'Healthspan Optimization', path: '/healthspan-optimization' },
+      { name: 'Functional Gynaecology', path: '/functional-gynaecology' },
+      { name: 'Longevity Protocols', path: '/longevity' },
+      { name: 'Diagnostics', path: '/diagnostics' },
+      { name: 'Nutrition', path: '/nutrition' }
+    ]
+  },
   { 
     name: 'Programs', 
     path: '/programs',
@@ -38,17 +50,6 @@ const navLinks = [
       { name: 'Energy Revitalization', path: '/programs#energy' },
       { name: 'Longevity Strategy', path: '/longevity' },
       { name: 'View All Programs', path: '/programs' }
-    ]
-  },
-  { name: 'Healthspan', path: '/healthspan-optimization' },
-  { 
-    name: 'Functional Gynaecology', 
-    path: '/functional-gynaecology',
-    subLinks: [
-      { name: 'Pelvic Health (HIFEM)', path: '/functional-gynaecology#pelvic' },
-      { name: 'Tissue Tonification (HIFU)', path: '/functional-gynaecology#tissue' },
-      { name: 'Hormonal Optimization', path: '/functional-gynaecology#hormonal' },
-      { name: 'Clinical Overview', path: '/functional-gynaecology' }
     ]
   },
   { name: 'Contact', path: '/contact' }

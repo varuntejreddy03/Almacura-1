@@ -1,4 +1,4 @@
-import { Leaf, Microscope, Activity, TrendingUp } from 'lucide-react';
+import { Activity, CheckCircle, Clock, Droplets, HeartPulse, Leaf, Microscope, TrendingUp, Waves } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import SectionLabel from '../components/SectionLabel';
 import CTAButton from '../components/CTAButton';
@@ -21,6 +21,12 @@ export default function Nutrition() {
       description: 'Evidence-based nutritional protocols designed to address identified deficiencies, support therapeutic interventions, and optimize metabolic health.'
     }
   ];
+  const therapySupport = [
+    { label: 'HBOT', icon: Waves, color: 'text-cyan-600', bg: 'bg-cyan-500/10', border: 'border-cyan-500/25', note: 'Optimized oxygen utilization' },
+    { label: 'EECP', icon: HeartPulse, color: 'text-rose-600', bg: 'bg-rose-500/10', border: 'border-rose-500/25', note: 'Cardiovascular nutrition support' },
+    { label: 'Longevity', icon: Clock, color: 'text-amber-700', bg: 'bg-amber-500/10', border: 'border-amber-500/25', note: 'Cellular health optimization' },
+    { label: 'PRP', icon: Droplets, color: 'text-fuchsia-700', bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/25', note: 'Collagen synthesis support' }
+  ];
 
   return (
     <div className="bg-brand-white pt-24">
@@ -33,7 +39,7 @@ export default function Nutrition() {
               Nutrition Is Clinical Correction.
             </h1>
             <p className="text-brand-muted text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto">
-              Not diet advice. Not supplementation. Targeted metabolic intervention based on diagnostic findings.
+              Not generic diet charts. Not guesswork supplementation. This is targeted metabolic intervention designed to restore your vitality based on your unique biochemistry.
             </p>
           </ScrollReveal>
         </div>
@@ -79,58 +85,28 @@ export default function Nutrition() {
 
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <ScrollReveal variant="fadeLeft">
-              {/* Visual Diagram */}
-              <div className="relative">
-                <div className="glass-card p-12">
-                  <div className="relative aspect-square">
-                    {/* Center Circle - Nutrition */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-brand-green/20 border-2 border-brand-green flex items-center justify-center">
-                      <div className="text-center">
-                        <Leaf className="mx-auto mb-2 text-brand-green" size={32} />
-                        <div className="font-mono text-brand-green text-xs uppercase">Nutrition</div>
-                      </div>
+              <div className="relative overflow-hidden rounded-[2rem] border border-white bg-white p-6 shadow-2xl shadow-brand-navy/10">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_35%_30%,rgba(11,110,110,0.14),transparent_45%),radial-gradient(circle_at_80%_80%,rgba(194,157,88,0.16),transparent_38%)]" />
+                <div className="relative grid grid-cols-2 gap-4">
+                  <div className="col-span-2 rounded-[1.5rem] border border-brand-green/25 bg-brand-green/10 p-8 text-center">
+                    <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border border-brand-green/30 bg-white text-brand-green shadow-lg">
+                      <Leaf size={36} strokeWidth={1.5} />
                     </div>
-
-                    {/* Radiating Nodes */}
-                    {[
-                      { label: 'HBOT', angle: 0 },
-                      { label: 'EECP', angle: 90 },
-                      { label: 'Longevity', angle: 180 },
-                      { label: 'PRP', angle: 270 }
-                    ].map((node, index) => {
-                      const radius = 140;
-                      const angleRad = (node.angle * Math.PI) / 180;
-                      const x = Math.cos(angleRad) * radius;
-                      const y = Math.sin(angleRad) * radius;
-
-                      return (
-                        <div key={node.label}>
-                          {/* Connection Line */}
-                          <div
-                            className="absolute top-1/2 left-1/2 h-px bg-brand-teal/30"
-                            style={{
-                              width: `${radius}px`,
-                              transform: `rotate(${node.angle}deg)`,
-                              transformOrigin: '0 0'
-                            }}
-                          ></div>
-                          {/* Node */}
-                          <div
-                            className="absolute w-20 h-20 rounded-full bg-brand-teal/10 border border-brand-teal/30 flex items-center justify-center"
-                            style={{
-                              top: `calc(50% + ${y}px)`,
-                              left: `calc(50% + ${x}px)`,
-                              transform: 'translate(-50%, -50%)'
-                            }}
-                          >
-                            <div className="font-mono text-brand-teal text-xs text-center uppercase">
-                              {node.label}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                    <h3 className="font-cormorant text-4xl font-bold text-brand-navy">Nutrition</h3>
+                    <p className="mt-2 font-dm text-[10px] font-bold uppercase tracking-[0.24em] text-brand-green">
+                      Clinical correction hub
+                    </p>
                   </div>
+
+                  {therapySupport.map(({ label, icon: Icon, color, bg, border, note }) => (
+                    <div key={label} className={`rounded-[1.25rem] border ${border} ${bg} p-5`}>
+                      <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white ${color} shadow-sm`}>
+                        <Icon size={24} strokeWidth={1.5} />
+                      </div>
+                      <div className="font-dm text-xs font-bold uppercase tracking-[0.22em] text-brand-navy">{label}</div>
+                      <p className="mt-2 text-sm leading-relaxed text-brand-muted">{note}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </ScrollReveal>
@@ -143,21 +119,21 @@ export default function Nutrition() {
                 <p>
                   Our nutrition protocols are not generic dietary recommendations. They are targeted metabolic interventions designed to:
                 </p>
-                <ul className="space-y-3 ml-6">
+                <ul className="space-y-3">
                   <li className="flex items-start gap-3">
-                    <span className="text-brand-green mt-1">•</span>
+                    <CheckCircle className="text-brand-green mt-1 shrink-0" size={18} />
                     <span>Support HBOT outcomes through optimized oxygen utilization</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-brand-green mt-1">•</span>
+                    <CheckCircle className="text-brand-green mt-1 shrink-0" size={18} />
                     <span>Enhance EECP effectiveness via cardiovascular nutrition</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-brand-green mt-1">•</span>
+                    <CheckCircle className="text-brand-green mt-1 shrink-0" size={18} />
                     <span>Maximize PRP regenerative potential through collagen synthesis support</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-brand-green mt-1">•</span>
+                    <CheckCircle className="text-brand-green mt-1 shrink-0" size={18} />
                     <span>Amplify longevity protocols with cellular health optimization</span>
                   </li>
                 </ul>

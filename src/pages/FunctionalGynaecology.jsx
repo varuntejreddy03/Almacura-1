@@ -201,9 +201,9 @@ export default function FunctionalGynaecology() {
               transition={{ duration: 0.8 }}
               className="relative rounded-[2.5rem] overflow-hidden aspect-[4/5] shadow-2xl shadow-brand-navy/10"
             >
-              <img 
-                src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=1000" 
-                alt="Clinical wellness care" 
+              <img
+                src="/Functional Gynecology.jpeg"
+                alt="Functional gynaecology care"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-brand-teal/10 mix-blend-multiply"></div>

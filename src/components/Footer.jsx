@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Mail, Phone, Star, MapPin, ExternalLink, Instagram, Youtube, Twitter, Facebook } from 'lucide-react';
 
-const googleReviewsUrl = 'https://share.google/4stVSowu4gN7VPjFy';
+const googleReviewsUrl = 'https://g.page/r/CYtqRXgkH3lWEBM/review';
 const linktreeUrl = 'https://linktr.ee/almacura.health';
 
 const socialLinks = [

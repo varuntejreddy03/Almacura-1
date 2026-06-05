@@ -32,7 +32,16 @@ export default function About() {
               About <span className="italic text-brand-teal">ALMACURA</span>
             </h1>
             <p className="font-dm text-lg text-brand-muted leading-relaxed max-w-3xl mx-auto">
-              A modern institute dedicated to Integrative Medicine, Healthspan Optimization, and Functional & Regenerative Gynecology — established within the trusted environment of Nightingale Hospital, Hyderabad.
+              A modern institute dedicated to Integrative Medicine, Healthspan Optimization, and Functional & Regenerative Gynecology - established within the trusted environment of{' '}
+              <a
+                href="https://www.nightingalhospitals.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-brand-teal underline underline-offset-4 hover:text-brand-navy transition-colors"
+              >
+                Nightingale Hospital
+              </a>
+              , Hyderabad.
             </p>
           </motion.div>
         </div>

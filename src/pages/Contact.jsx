@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { MapPin, Phone, MessageSquare, Calendar, Mail, Clock } from 'lucide-react';
 import useSEO from '../hooks/useSEO';
 
+const googleMapsUrl = 'https://www.google.com/maps/place/ALMACURA/@17.3511785,78.5095196,17z/data=!3m1!4b1!4m6!3m5!1s0x3bcb99fc1fd6c481:0x56791f2478456a8b!8m2!3d17.3511785!4d78.5095196!16s%2Fg%2F11z6nbf7zt?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D';
+
 export default function Contact() {
   useSEO(
     'Contact ALMACURA | Location & Appointments',
@@ -282,6 +284,17 @@ export default function Contact() {
             referrerPolicy="no-referrer-when-downgrade"
             className="grayscale hover:grayscale-0 transition-all duration-700"
           ></iframe>
+          <div className="absolute left-6 right-6 bottom-6 flex justify-center sm:justify-end pointer-events-none">
+            <a
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pointer-events-auto inline-flex items-center justify-center gap-3 rounded-full bg-white px-6 py-3 font-dm text-[10px] font-bold uppercase tracking-[0.22em] text-brand-navy shadow-2xl hover:bg-brand-teal hover:text-white transition-all"
+            >
+              <MapPin className="w-4 h-4" />
+              Open Full Google Maps
+            </a>
+          </div>
         </motion.div>
       </div>
     </main>

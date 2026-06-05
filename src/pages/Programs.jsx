@@ -117,7 +117,7 @@ export default function Programs() {
               <div className="flex flex-col sm:flex-row gap-6">
                 <Link to="/contact" className="w-full sm:w-auto">
                   <button className="w-full sm:w-auto px-10 py-5 bg-white text-brand-navy rounded-full font-dm font-bold text-[11px] uppercase tracking-[.3em] hover:bg-brand-teal hover:text-white transition-all shadow-2xl">
-                    View Pricing Structure
+                    Connect for Pricing Structure
                   </button>
                 </Link>
                 <a href="https://wa.me/919966030085" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">

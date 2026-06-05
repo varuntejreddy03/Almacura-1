@@ -210,7 +210,7 @@
   hifem: {
     title: "HIFEM - Pelvic Chair Therapy",
     subtitle: "High-Intensity Focused Electromagnetic Technology",
-    img: "/therapy-hifem.jpg",
+    img: "/HIFEM Pelvic Chair therapy.jpeg",
     description: "A non-invasive procedure for pelvic floor strengthening and urinary incontinence treatment.",
     sessionDuration: "28 minutes",
     typicalCourse: "6 sessions (twice weekly)",
@@ -395,7 +395,7 @@
   yoga: {
     title: "Regenerative Yoga Therapy",
     subtitle: "Clinical yoga for physiological regulation and stress management",
-    img: "/therapy-yoga.jpg",
+    img: "/Regenerative Yoga Therapy.jpeg",
     description: "Yoga therapy at ALMACURA is not fitness — it is a clinical tool for physiological regulation, stress management, and long-term functional recovery.",
     sessionDuration: "45-60 minutes",
     typicalCourse: "Ongoing / as prescribed",
@@ -431,7 +431,7 @@
   'infrared-sauna': {
     title: "Infrared Sauna",
     subtitle: "Deep thermal heat for cellular detoxification & recovery",
-    img: "/therapy-sauna.jpg",
+    img: "/Infrared Sauna.jpeg",
     description: "Exposing the body to infrared heat wavelengths to stimulate circulation, promote detoxification, and support cellular repair.",
     sessionDuration: "30-45 minutes",
     typicalCourse: "2-3 times per week",

@@ -379,7 +379,7 @@ export default function Home() {
               { name: 'Hyperbaric Oxygen Therapy (HBOT)', img: '/therapy-hbot.jpg', slug: 'hbot' },
               { name: 'EECP Therapy', img: '/therapy-eecp.jpg', slug: 'eecp' },
               { name: 'Ozone Therapy', img: '/therapy-ozone.jpg', slug: 'ozone' },
-              { name: 'HIFEM - Pelvic Chair', img: '/therapy-hifem.jpg', slug: 'hifem' },
+              { name: 'HIFEM - Pelvic Chair', img: '/HIFEM Pelvic Chair therapy.jpeg', slug: 'hifem' },
               { name: 'HIFU - Women Wellness', img: '/therapy-hifu.jpg', slug: 'hifu' },
               { name: 'PRP Therapy', img: '/therapy-prp.jpg', slug: 'prp' },
               { name: 'DSCB - Pain Portal Block', img: '/therapy-dscb.jpg', slug: 'dscb' },
