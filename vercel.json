@@ -14,9 +14,53 @@
     { "source": "/nutrition", "destination": "/services/nutrition", "permanent": true }
   ],
   "rewrites": [
+    { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/about/founder", "destination": "/about/founder/index.html" },
+    { "source": "/about/team", "destination": "/about/team/index.html" },
+    { "source": "/contact", "destination": "/contact/index.html" },
+    { "source": "/for-doctors", "destination": "/for-doctors/index.html" },
+    { "source": "/programs", "destination": "/programs/index.html" },
+    { "source": "/programs/detox", "destination": "/programs/detox/index.html" },
+    { "source": "/programs/energy-revitalization", "destination": "/programs/energy-revitalization/index.html" },
+    { "source": "/programs/longevity-strategy", "destination": "/programs/longevity-strategy/index.html" },
+    { "source": "/services", "destination": "/services/index.html" },
+    { "source": "/services/integrative-medicine", "destination": "/services/integrative-medicine/index.html" },
+    { "source": "/services/healthspan-optimization", "destination": "/services/healthspan-optimization/index.html" },
+    { "source": "/services/functional-gynaecology", "destination": "/services/functional-gynaecology/index.html" },
+    { "source": "/services/longevity", "destination": "/services/longevity/index.html" },
+    { "source": "/services/diagnostics", "destination": "/services/diagnostics/index.html" },
+    { "source": "/services/nutrition", "destination": "/services/nutrition/index.html" },
+    { "source": "/therapies", "destination": "/therapies/index.html" },
+    { "source": "/therapies/hbot", "destination": "/therapies/hbot/index.html" },
+    { "source": "/therapies/eecp", "destination": "/therapies/eecp/index.html" },
+    { "source": "/therapies/prp", "destination": "/therapies/prp/index.html" },
+    { "source": "/therapies/ozone", "destination": "/therapies/ozone/index.html" },
+    { "source": "/therapies/hydrogen", "destination": "/therapies/hydrogen/index.html" },
+    { "source": "/therapies/hifem", "destination": "/therapies/hifem/index.html" },
+    { "source": "/therapies/hifu", "destination": "/therapies/hifu/index.html" },
+    { "source": "/therapies/dscb", "destination": "/therapies/dscb/index.html" },
+    { "source": "/therapies/iv-therapy", "destination": "/therapies/iv-therapy/index.html" },
+    { "source": "/therapies/red-light", "destination": "/therapies/red-light/index.html" },
+    { "source": "/therapies/acupuncture", "destination": "/therapies/acupuncture/index.html" },
+    { "source": "/therapies/yoga", "destination": "/therapies/yoga/index.html" },
+    { "source": "/therapies/infrared-sauna", "destination": "/therapies/infrared-sauna/index.html" },
+    { "source": "/blog", "destination": "/blog/index.html" },
+    { "source": "/faq", "destination": "/faq/index.html" },
+    { "source": "/testimonials", "destination": "/testimonials/index.html" },
+    { "source": "/privacy-policy", "destination": "/privacy-policy/index.html" },
+    { "source": "/terms", "destination": "/terms/index.html" },
+    { "source": "/disclaimer", "destination": "/disclaimer/index.html" },
+    { "source": "/sitemap", "destination": "/sitemap/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+      ]
     }
   ]
 }

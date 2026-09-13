@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build && node prerender.js",
+    "build:vite": "vite build",
+    "prerender": "node prerender.js",
+    "preview": "vite preview",
+    "verify-seo": "node verify-seo.js"
   },
   "dependencies": {
     "@studio-freight/lenis": "^1.0.42",
