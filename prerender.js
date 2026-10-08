@@ -169,6 +169,30 @@ const seoConfig = {
   },
 };
 
+// Meta Pixel Code (script part for head)
+const META_PIXEL_SCRIPT = `
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1891954192184925');
+    fbq('track', 'PageView');
+    </script>
+    <!-- End Meta Pixel Code -->`;
+
+// Meta Pixel noscript (for body)
+const META_PIXEL_NOSCRIPT = `
+    <!-- Meta Pixel noscript fallback -->
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1891954192184925&ev=PageView&noscript=1"
+    /></noscript>`;
+
 // Generate meta tags for a route
 function generateMetaTags(route, seo) {
   const canonical = `${BASE_URL}${route}`;
@@ -192,7 +216,7 @@ function generateMetaTags(route, seo) {
     <meta name="twitter:url" content="${canonical}" />
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
-    <meta name="twitter:image" content="${BASE_URL}/logo.png" />`;
+    <meta name="twitter:image" content="${BASE_URL}/logo.png" />${META_PIXEL_SCRIPT}`;
 }
 
 // Read the base index.html
@@ -230,6 +254,14 @@ function replaceMetaTags(html, route, seo) {
     /(<meta\s+name="theme-color"[^>]*>)/i,
     `$1${newMetaTags}`
   );
+  
+  // Add Meta Pixel noscript to body if not present
+  if (!modifiedHtml.includes('facebook.com/tr?id=1891954192184925')) {
+    modifiedHtml = modifiedHtml.replace(
+      /(<body[^>]*>)/i,
+      `$1${META_PIXEL_NOSCRIPT}`
+    );
+  }
   
   return modifiedHtml;
 }
